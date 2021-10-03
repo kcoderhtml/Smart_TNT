@@ -1,20 +1,20 @@
 import events.explode;
+import items.matroska_tnt;
 import items.mining_tnt;
 import items.reverse_tnt;
-import items.empty_item;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.java.JavaPlugin;
 import thirtyvirus.uber.UberItems;
+import thirtyvirus.uber.UberMaterial;
 import thirtyvirus.uber.helpers.AbilityType;
 import thirtyvirus.uber.helpers.UberAbility;
 import thirtyvirus.uber.helpers.UberCraftingRecipe;
 import thirtyvirus.uber.helpers.UberRarity;
 
 import java.util.Arrays;
-import java.util.Collections;
 
 public class SmartTNT extends JavaPlugin {
 
@@ -67,8 +67,6 @@ public class SmartTNT extends JavaPlugin {
     //      (the same case for strings, just storeStringInItem and getStringFromItem)
 
     private void registerUberItems() {
-        UberItems.putItem("empty_item", new empty_item(Material.DIAMOND, "Empty UberItem", UberRarity.COMMON,
-                false, false, false, Collections.emptyList(), null));
 
         UberItems.putItem("mining_tnt", new mining_tnt(Material.TNT, "Mining TNT",
                 UberRarity.RARE, true, true, false,
@@ -85,8 +83,24 @@ public class SmartTNT extends JavaPlugin {
                         new ItemStack(Material.AIR),
                         new ItemStack(Material.GRAVEL, 8),
                         new ItemStack(Material.AIR, 4)), false, 1)));
+
+        UberItems.putItem("matroska_tnt", new matroska_tnt(Material.TNT, "Matroska TNT",
+                UberRarity.RARE, true, true, false,
+                Arrays.asList(
+                        new UberAbility("Nested TNT", AbilityType.RIGHT_CLICK, "somehow 85 TNT got squished into one")),
+                new UberCraftingRecipe(Arrays.asList(
+                        new ItemStack(Material.TNT, 4),
+                        UberItems.getMaterial("spark_dust").makeItem(4),
+                        new ItemStack(Material.TNT, 4),
+                        UberItems.getMaterial("spark_dust").makeItem(4),
+                        new ItemStack(Material.TNT, 4),
+                        UberItems.getMaterial("spark_dust").makeItem(4),
+                        new ItemStack(Material.TNT, 4),
+                        UberItems.getMaterial("spark_dust").makeItem(4),
+                        new ItemStack(Material.TNT, 4)), false, 1)));
+
         UberItems.putItem("reverse_tnt", new reverse_tnt(Material.TNT, "Reverse TNT",
-                UberRarity.EPIC, true, true, false,
+                UberRarity.LEGENDARY, true, true, false,
                 Arrays.asList(
                         new UberAbility("Backup", AbilityType.RIGHT_CLICK, "Restores blocks broken /newline in the past 15 minutes")),
                 new UberCraftingRecipe(Arrays.asList(
