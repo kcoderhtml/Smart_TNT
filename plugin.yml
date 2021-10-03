@@ -1,0 +1,6 @@
+main: SmartTNT
+version: 1.0
+name: SmartTNT
+api-version: 1.13
+
+softdepend: [UberItems]
