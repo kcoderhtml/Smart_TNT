@@ -1,12 +1,13 @@
+import events.explode;
+import items.mining_tnt;
+import items.reverse_tnt;
 import items.empty_item;
-import items.example_uber_item;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.java.JavaPlugin;
 import thirtyvirus.uber.UberItems;
-import thirtyvirus.uber.UberMaterial;
 import thirtyvirus.uber.helpers.AbilityType;
 import thirtyvirus.uber.helpers.UberAbility;
 import thirtyvirus.uber.helpers.UberCraftingRecipe;
@@ -39,7 +40,7 @@ public class SmartTNT extends JavaPlugin {
         getLogger().info(getDescription().getName() + " V: " + getDescription().getVersion() + " has been disabled");
     }
     private void registerEvents() {
-        //getServer().getPluginManager().registerEvents(new ProjectileHit(), this);
+        getServer().getPluginManager().registerEvents(new explode(), this);
     }
 
     // NEW UBER ITEM CHECKLIST
@@ -69,41 +70,39 @@ public class SmartTNT extends JavaPlugin {
         UberItems.putItem("empty_item", new empty_item(Material.DIAMOND, "Empty UberItem", UberRarity.COMMON,
                 false, false, false, Collections.emptyList(), null));
 
-        UberItems.putItem("example_uber_item", new example_uber_item(Material.WOODEN_SHOVEL, "Example Uber Item",
-                UberRarity.UNFINISHED, false, false, true,
+        UberItems.putItem("mining_tnt", new mining_tnt(Material.TNT, "Mining TNT",
+                UberRarity.RARE, true, true, false,
                 Arrays.asList(
-                        new UberAbility("Example Ability", AbilityType.NONE, "Adds an enchantment glint to items when they are clicked onto this item in the inventory... because why not? xD"),
-                        new UberAbility("Cooldown Demonstration", AbilityType.LEFT_CLICK, "Makes a sound? Idk you can only do it once every 5 seconds", 5),
-                        new UberAbility("Midas Step", AbilityType.RIGHT_CLICK, "(toggle) every block you step on turns into gold while holding this item")),
+                        new UberAbility("Certified Specialist", AbilityType.RIGHT_CLICK, "Place TNT in the exact spot you're looking " + ChatColor.DARK_GRAY + ChatColor.ITALIC + "15 Block Radius"),
+                        new UberAbility("Precise Blast", AbilityType.NONE, "Breaks blocks cleanly in a radius /newline " + ChatColor.DARK_GRAY + ChatColor.ITALIC + "Guaranteed Drops, Immune to Water!")),
                 new UberCraftingRecipe(Arrays.asList(
-                        UberItems.getMaterial("enchanted_chest").makeItem(1),
-                        UberItems.getMaterial("enchanted_diamond").makeItem(1),
-                        UberItems.getMaterial("enchanted_chest").makeItem(1),
                         new ItemStack(Material.AIR),
-                        new ItemStack(Material.STICK, 8),
+                        new ItemStack(Material.GRAVEL, 8),
                         new ItemStack(Material.AIR),
+                        new ItemStack(Material.FLINT, 4),
+                        new ItemStack(Material.TNT, 2),
+                        new ItemStack(Material.FLINT, 4),
                         new ItemStack(Material.AIR),
-                        new ItemStack(Material.STICK, 8),
-                        new ItemStack(Material.AIR)), false, 1)));
+                        new ItemStack(Material.GRAVEL, 8),
+                        new ItemStack(Material.AIR, 4)), false, 1)));
+        UberItems.putItem("reverse_tnt", new reverse_tnt(Material.TNT, "Reverse TNT",
+                UberRarity.EPIC, true, true, false,
+                Arrays.asList(
+                        new UberAbility("Backup", AbilityType.RIGHT_CLICK, "Restores blocks broken /newline in the past 15 minutes")),
+                new UberCraftingRecipe(Arrays.asList(
+                        new ItemStack(Material.REDSTONE, 4),
+                        new ItemStack(Material.CHEST),
+                        new ItemStack(Material.REDSTONE, 4),
+                        new ItemStack(Material.ENDER_PEARL, 16),
+                        new ItemStack(Material.TNT),
+                        new ItemStack(Material.ENDER_PEARL, 16),
+                        new ItemStack(Material.REDSTONE, 4),
+                        new ItemStack(Material.CLOCK),
+                        new ItemStack(Material.REDSTONE, 4)), false, 1)));
 
     }
     private void registerUberMaterials() {
-        UberItems.putMaterial("enchanted_sponge", new UberMaterial(Material.SPONGE,
-                "Enchanted Sponge", UberRarity.RARE, true, false, false,
-                "idk why I chose sponge, but hey this demonstrates how to make a custom UberMaterial lol",
-                new UberCraftingRecipe(Arrays.asList(
-                        new ItemStack(Material.AIR),
-                        new ItemStack(Material.SPONGE, 32),
-                        new ItemStack(Material.AIR),
-                        new ItemStack(Material.SPONGE, 32),
-                        new ItemStack(Material.SPONGE, 32),
-                        new ItemStack(Material.SPONGE, 32),
-                        new ItemStack(Material.AIR),
-                        new ItemStack(Material.SPONGE, 32),
-                        new ItemStack(Material.AIR)), false, 1)));
-        UberItems.putMaterial("thumbnail", new UberMaterial(Material.GOLDEN_APPLE,
-                "Titan Apple", UberRarity.MYTHIC, true, false, false,
-                "" + ChatColor.GRAY + ChatColor.ITALIC + "look at what they /newline " + ChatColor.ITALIC + "need to mimic a /newline " + ChatColor.ITALIC + "fraction of our power",
-                null));
+
     }
+
 }
