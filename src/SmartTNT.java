@@ -1,7 +1,5 @@
 import events.explode;
-import items.matroska_tnt;
-import items.mining_tnt;
-import items.reverse_tnt;
+import items.*;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
@@ -68,11 +66,41 @@ public class SmartTNT extends JavaPlugin {
 
     private void registerUberItems() {
 
+        UberItems.putItem("tele_tnt", new tele_tnt(Material.TNT, "TeleTNT",
+                UberRarity.UNCOMMON, true, true, false,
+                Arrays.asList(
+                        new UberAbility("Displacement", AbilityType.RIGHT_CLICK, "Teleport blocks")),
+                new UberCraftingRecipe(Arrays.asList(
+                        new ItemStack(Material.AIR),
+                        new ItemStack(Material.ENDER_PEARL),
+                        new ItemStack(Material.AIR),
+                        new ItemStack(Material.ENDER_PEARL),
+                        new ItemStack(Material.TNT, 4),
+                        new ItemStack(Material.ENDER_PEARL),
+                        new ItemStack(Material.AIR),
+                        new ItemStack(Material.ENDER_PEARL),
+                        new ItemStack(Material.AIR)), false, 16)));
+
+        UberItems.putItem("winter_tnt", new winter_tnt(Material.TNT, "Winter TNT",
+                UberRarity.UNCOMMON, true, true, false,
+                Arrays.asList(
+                        new UberAbility("Chill out", AbilityType.RIGHT_CLICK, "Convert blocks into a snowy winter wonderland")),
+                new UberCraftingRecipe(Arrays.asList(
+                        new ItemStack(Material.BLUE_ICE),
+                        new ItemStack(Material.SNOW_BLOCK),
+                        new ItemStack(Material.ICE),
+                        new ItemStack(Material.SNOW_BLOCK),
+                        new ItemStack(Material.TNT, 4),
+                        new ItemStack(Material.SNOW_BLOCK),
+                        new ItemStack(Material.ICE),
+                        new ItemStack(Material.SNOW_BLOCK),
+                        new ItemStack(Material.BLUE_ICE)), false, 16)));
+
         UberItems.putItem("mining_tnt", new mining_tnt(Material.TNT, "Mining TNT",
                 UberRarity.RARE, true, true, false,
                 Arrays.asList(
-                        new UberAbility("Certified Specialist", AbilityType.RIGHT_CLICK, "Place TNT in the exact spot you're looking " + ChatColor.DARK_GRAY + ChatColor.ITALIC + "15 Block Radius"),
-                        new UberAbility("Precise Blast", AbilityType.NONE, "Breaks blocks cleanly in a radius /newline " + ChatColor.DARK_GRAY + ChatColor.ITALIC + "Guaranteed Drops, Immune to Water!")),
+                        new UberAbility("Precise Blast", AbilityType.RIGHT_CLICK, "Place TNT in the exact spot you're looking " + ChatColor.DARK_GRAY + ChatColor.ITALIC + "15 Block Radius"),
+                        new UberAbility("Certified Specialist", AbilityType.NONE, "Breaks blocks cleanly in a radius /newline " + ChatColor.DARK_GRAY + ChatColor.ITALIC + "Guaranteed Drops, Immune to Water!")),
                 new UberCraftingRecipe(Arrays.asList(
                         new ItemStack(Material.AIR),
                         new ItemStack(Material.GRAVEL, 8),
@@ -82,7 +110,7 @@ public class SmartTNT extends JavaPlugin {
                         new ItemStack(Material.FLINT, 4),
                         new ItemStack(Material.AIR),
                         new ItemStack(Material.GRAVEL, 8),
-                        new ItemStack(Material.AIR, 4)), false, 1)));
+                        new ItemStack(Material.AIR)), false, 1)));
 
         UberItems.putItem("matroska_tnt", new matroska_tnt(Material.TNT, "Matroska TNT",
                 UberRarity.RARE, true, true, false,
@@ -98,6 +126,21 @@ public class SmartTNT extends JavaPlugin {
                         new ItemStack(Material.TNT, 4),
                         UberItems.getMaterial("spark_dust").makeItem(4),
                         new ItemStack(Material.TNT, 4)), false, 1)));
+
+        UberItems.putItem("big_boy", new big_boy(Material.TNT, "Big Boy",
+                UberRarity.EPIC, true, true, false,
+                Arrays.asList(
+                        new UberAbility("25 Kill Streak!", AbilityType.RIGHT_CLICK, "Press Right Click for TACTICAL NUKE.")),
+                new UberCraftingRecipe(Arrays.asList(
+                        new ItemStack(Material.AIR),
+                        UberItems.getMaterial("spark_dust").makeItem(16),
+                        new ItemStack(Material.AIR),
+                        UberItems.getMaterial("spark_dust").makeItem(16),
+                        new ItemStack(Material.TNT, 64),
+                        UberItems.getMaterial("spark_dust").makeItem(16),
+                        new ItemStack(Material.AIR),
+                        UberItems.getMaterial("spark_dust").makeItem(16),
+                        new ItemStack(Material.AIR)), false, 1)));
 
         UberItems.putItem("reverse_tnt", new reverse_tnt(Material.TNT, "Reverse TNT",
                 UberRarity.LEGENDARY, true, true, false,
