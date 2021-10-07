@@ -13,6 +13,7 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.entity.EntityExplodeEvent;
+import org.bukkit.event.entity.ProjectileHitEvent;
 import org.bukkit.metadata.FixedMetadataValue;
 import org.bukkit.util.Vector;
 import thirtyvirus.uber.UberItems;
@@ -23,7 +24,7 @@ import java.util.*;
 public class explode implements Listener {
 
     private static Map<Location, BlockState> savedExplodedBlocks = new HashMap<>();
-    private int ticksLimit = 20 * 15;
+    private int ticksLimit = 20 * 60 * 15;
 
     private static final List<Material> EXCLUDE = Arrays.asList(Material.TNT, Material.GRASS, Material.TALL_GRASS,
             Material.AIR, Material.DANDELION, Material.POPPY, Material.SPRUCE_LOG, Material.SPRUCE_LEAVES,
@@ -43,9 +44,9 @@ public class explode implements Listener {
             event.getLocation().getWorld().playSound(event.getEntity().getLocation(), Sound.ENTITY_GENERIC_EXPLODE, 3, 0.5f);
             event.setCancelled(true);
             for (Block block : event.blockList()) {
-
+                saveBlockState(block);
                 if (block.getType().isSolid()) {
-                    Block newBlock = block.getWorld().getBlockAt(block.getLocation().add(0,20,0));
+                    Block newBlock = block.getWorld().getBlockAt(block.getLocation().add(0,30,0));
                     newBlock.setType(block.getType());
                     newBlock.setBlockData(block.getBlockData());
                 }
@@ -60,6 +61,7 @@ public class explode implements Listener {
             event.setCancelled(true);
 
             for (Block block : event.blockList()) {
+                if (!EXCLUDE.contains(block.getType())) saveBlockState(block);
                 block.setBiome(Biome.TAIGA);
                 if (EXCLUDE.contains(block.getType())) continue;
                 replaceBlockWithWinter(block);
@@ -81,16 +83,15 @@ public class explode implements Listener {
         // process matroska TNT
         if (event.getEntity().hasMetadata("nested")) {
             int nestLevel = event.getEntity().getMetadata("nested").get(0).asInt();
+            for (Block block : event.blockList()) saveBlockState(block);
             if (nestLevel > 0) {
-                for (Block block : event.blockList()) saveBlockState(block);
                 nestedExplosion((TNTPrimed)event.getEntity(), 3, nestLevel);
             }
         }
 
         // process reverse TNT
         if (event.getEntity().hasMetadata("repair")) {
-            Bukkit.getLogger().info("saved exploded blocks: " + savedExplodedBlocks.size());
-            for (Block block : getNearbyBlocks(event.getEntity().getLocation(), 6)) restoreBlockState(block);
+            for (Block block : getNearbyBlocks(event.getEntity().getLocation(), 10)) restoreBlockState(block);
             event.getLocation().getWorld().playSound(event.getEntity().getLocation(), Sound.ENTITY_GENERIC_EXPLODE, 3, 0.5f);
             event.setCancelled(true);
         }
@@ -98,11 +99,13 @@ public class explode implements Listener {
         // process big boy
         if (event.getEntity().hasMetadata("bigboy")) {
             event.setCancelled(true);
+            for (Block block : event.blockList()) saveBlockState(block);
             event.getLocation().getWorld().playSound(event.getEntity().getLocation(), Sound.ENTITY_DRAGON_FIREBALL_EXPLODE, 3, 0.5f);
             nineExplosions(event.getLocation(), 24, 50);
             if (event.getLocation().getY() > 9) nineExplosions(event.getLocation().clone().add(0, -8, 0), 17, 50);
             if (event.getLocation().getY() > 18) nineExplosions(event.getLocation().clone().add(0, -17, 0), 15, 50);
         }
+
     }
 
     @EventHandler
@@ -112,6 +115,7 @@ public class explode implements Listener {
 
     private void saveBlockState(Block block) {
         if (block.getType() == Material.AIR || block.getType() == Material.WATER) return;
+        if (savedExplodedBlocks.containsKey(block.getLocation())) return;
 
         savedExplodedBlocks.put(block.getLocation(), block.getState());
         Utilities.scheduleTask(() -> savedExplodedBlocks.remove(block.getLocation()) , ticksLimit);
@@ -126,6 +130,8 @@ public class explode implements Listener {
         block.setType(backup.getBlock().getType());
         block.setBlockData(backup.getBlockData());
         block.setBiome(backup.getBlock().getBiome());
+
+        savedExplodedBlocks.remove(block.getLocation());
     }
 
     private static List<Block> getNearbyBlocks(Location location, int radius) {
@@ -161,17 +167,27 @@ public class explode implements Listener {
     }
 
     private static void nineExplosions(Location location, int factor, int power) {
-        Utilities.scheduleTask(() -> location.getWorld().createExplosion(location.clone().add(factor * -1, 0, factor * -1), power), 1);
-        Utilities.scheduleTask(() -> location.getWorld().createExplosion(location.clone().add(0, 0, factor * -1), power), 2);
-        Utilities.scheduleTask(() -> location.getWorld().createExplosion(location.clone().add(factor, 0, factor * -1), power), 3);
 
-        Utilities.scheduleTask(() -> location.getWorld().createExplosion(location.clone().add(factor * -1, 0, 0), power), 4);
-        Utilities.scheduleTask(() -> location.getWorld().createExplosion(location.clone().add(0, 0, 0), power), 5);
-        Utilities.scheduleTask(() -> location.getWorld().createExplosion(location.clone().add(factor, 0, 0), power), 6);
+        spawnInstantTNT(location.clone().add(factor * -1, 0, factor * -1), power, 1);
+        spawnInstantTNT(location.clone().add(0, 0, factor * -1), power, 2);
+        spawnInstantTNT(location.clone().add(factor, 0, factor * -1), power, 3);
 
-        Utilities.scheduleTask(() -> location.getWorld().createExplosion(location.clone().add(factor * -1, 0, factor), power), 7);
-        Utilities.scheduleTask(() -> location.getWorld().createExplosion(location.clone().add(0, 0, factor), power), 8);
-        Utilities.scheduleTask(() -> location.getWorld().createExplosion(location.clone().add(factor, 0, factor), power), 9);
+        spawnInstantTNT(location.clone().add(factor * -1, 0, 0), power, 4);
+        spawnInstantTNT(location.clone().add(0, 0, 0), power, 5);
+        spawnInstantTNT(location.clone().add(factor, 0, 0), power, 6);
+
+        spawnInstantTNT(location.clone().add(factor * -1, 0, factor), power,7);
+        spawnInstantTNT(location.clone().add(0, 0, factor), power, 8);
+        spawnInstantTNT(location.clone().add(factor, 0, factor), power, 9);
+
+    }
+
+    private static void spawnInstantTNT(Location location, int power, int delay) {
+        Utilities.scheduleTask(() -> {
+            TNTPrimed tnt = location.getWorld().spawn(location, TNTPrimed.class);
+            tnt.setYield(power); tnt.setFuseTicks(1);
+        }, delay);
+
     }
 
     private static void replaceBlockWithWinter(Block block) {

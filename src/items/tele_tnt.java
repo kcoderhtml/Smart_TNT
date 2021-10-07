@@ -40,7 +40,7 @@ public class tele_tnt extends UberItem {
 
         tnt.setMetadata("ubertnt", new FixedMetadataValue(UberItems.getInstance(), "a"));
         tnt.setMetadata("tele", new FixedMetadataValue(UberItems.getInstance(), "a"));
-        tnt.setYield(8);
+        tnt.setYield(10);
 
         return true;
     }
