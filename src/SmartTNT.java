@@ -67,7 +67,7 @@ public class SmartTNT extends JavaPlugin {
     private void registerUberItems() {
 
         UberItems.putItem("tele_tnt", new tele_tnt(Material.TNT, "TeleTNT",
-                UberRarity.UNCOMMON, true, true, false,
+                UberRarity.RARE, true, true, false,
                 Arrays.asList(
                         new UberAbility("Displacement", AbilityType.RIGHT_CLICK, "Teleport blocks")),
                 new UberCraftingRecipe(Arrays.asList(
@@ -82,7 +82,7 @@ public class SmartTNT extends JavaPlugin {
                         new ItemStack(Material.AIR)), false, 16)));
 
         UberItems.putItem("winter_tnt", new winter_tnt(Material.TNT, "Winter TNT",
-                UberRarity.UNCOMMON, true, true, false,
+                UberRarity.RARE, true, true, false,
                 Arrays.asList(
                         new UberAbility("Chill out", AbilityType.RIGHT_CLICK, "Convert blocks into a snowy winter wonderland")),
                 new UberCraftingRecipe(Arrays.asList(
@@ -128,7 +128,7 @@ public class SmartTNT extends JavaPlugin {
                         new ItemStack(Material.TNT, 4)), false, 1)));
 
         UberItems.putItem("big_boy", new big_boy(Material.TNT, "Big Boy",
-                UberRarity.EPIC, true, true, false,
+                UberRarity.RARE, true, true, false,
                 Arrays.asList(
                         new UberAbility("25 Kill Streak!", AbilityType.RIGHT_CLICK, "Press Right Click for TACTICAL NUKE.")),
                 new UberCraftingRecipe(Arrays.asList(
@@ -143,7 +143,7 @@ public class SmartTNT extends JavaPlugin {
                         new ItemStack(Material.AIR)), false, 1)));
 
         UberItems.putItem("reverse_tnt", new reverse_tnt(Material.TNT, "Reverse TNT",
-                UberRarity.LEGENDARY, true, true, false,
+                UberRarity.RARE, true, true, false,
                 Arrays.asList(
                         new UberAbility("Backup", AbilityType.RIGHT_CLICK, "Restores blocks broken /newline in the past 15 minutes")),
                 new UberCraftingRecipe(Arrays.asList(
